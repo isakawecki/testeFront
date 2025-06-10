@@ -11,12 +11,12 @@ function HomeMedico() {
 
   useEffect(() => {
     const usuarioLocal = JSON.parse(localStorage.getItem('usuarioLogado'));
-    if (usuarioLocal && usuarioLocal.tipo === 'medico') {
-      setUsuario(usuarioLocal);
-      carregarConsultas(usuarioLocal.id);
-    } else {
-      navigate('/');
+    if (!usuarioLocal?.token || usuarioLocal.tipo !== 'medico') {
+      navigate('/login');
+      return;
     }
+    setUsuario(usuarioLocal);
+    carregarConsultas(usuarioLocal.id);
   }, [navigate]);
 
   const carregarConsultas = async (medicoId) => {
@@ -39,7 +39,6 @@ function HomeMedico() {
         dataHora: disponibilidade,
       });
 
-      // Recarrega dados do médico (inclui disponibilidade)
       const medicoAtualizado = await api.get(`/usuarios/${usuario.id}`);
       setUsuario(medicoAtualizado.data);
       setDisponibilidade('');
@@ -59,7 +58,7 @@ function HomeMedico() {
 
   const deslogar = () => {
     localStorage.removeItem('usuarioLogado');
-    navigate('/');
+    navigate('/login');
   };
 
   return (
@@ -74,7 +73,7 @@ function HomeMedico() {
       <input
         type="datetime-local"
         value={disponibilidade}
-        onChange={(e) => setDisponibilidade(e.target.value)}
+        onChange={e => setDisponibilidade(e.target.value)}
       />
       <button onClick={adicionarDisponibilidade}>Adicionar</button>
 
@@ -90,7 +89,7 @@ function HomeMedico() {
       <h3>Consultas Pendentes</h3>
       {consultasPendentes.length === 0 && <p>Nenhuma consulta pendente</p>}
       <ul>
-        {consultasPendentes.map((c) => (
+        {consultasPendentes.map(c => (
           <li key={c.id}>
             Paciente: {c.paciente.nome} - {new Date(c.data).toLocaleString()}
             <button onClick={() => aceitarConsulta(c.id)}>Aceitar</button>
@@ -101,7 +100,7 @@ function HomeMedico() {
       <h3>Consultas Aceitas</h3>
       {consultasAceitas.length === 0 && <p>Nenhuma consulta aceita</p>}
       <ul>
-        {consultasAceitas.map((c) => (
+        {consultasAceitas.map(c => (
           <li key={c.id}>
             Paciente: {c.paciente.nome} - {new Date(c.data).toLocaleString()}
           </li>
