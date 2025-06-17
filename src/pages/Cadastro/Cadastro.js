@@ -26,14 +26,14 @@ function Cadastro() {
       return;
     }
 
-    // Ajuste: dataNascimento enviado no formato yyyy-MM-dd, pois backend usa LocalDate
+    
     const usuario = {
       nome,
       email,
       senha,
       telefone,
       ...(tipoUsuario === 'medico' && { especialidade }),
-      ...(tipoUsuario === 'paciente' && { dataNascimento }), // dataNascimento já está no formato yyyy-MM-dd pelo input type=date
+      ...(tipoUsuario === 'paciente' && { dataNascimento }),
     };
 
     try {
