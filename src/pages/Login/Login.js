@@ -11,31 +11,37 @@ function Login() {
 
  const handleLogin = async (e) => {
   e.preventDefault();
-  console.log('Tentando logar com:', { email, senha });
+  setErro('');
 
   try {
     const response = await api.post('/login', { email, senha });
     console.log('Resposta do login:', response.data);
 
-    alert('Login bem-sucedido!');
+    const { tipo, usuario } = response.data;
+    const token = null;
 
-    const { token, tipo, nome, id } = response.data;
-
-    localStorage.setItem('usuarioLogado', JSON.stringify({ token, tipo, nome, id }));
-    console.log('Usuário salvo no localStorage');
+    localStorage.setItem('usuarioLogado', JSON.stringify({
+      ...usuario,
+      tipo,
+      token
+    }));
 
     if (tipo === 'medico') {
-      navigate('/homeMedico ');
+      console.log('Redirecionando para /homeMedico');
+      navigate('/homeMedico');
     } else if (tipo === 'paciente') {
+      console.log('Redirecionando para /homePaciente');
       navigate('/homePaciente');
     } else {
       setErro('Tipo de usuário inválido');
     }
+
   } catch (err) {
     console.error('Erro no login:', err);
     setErro('Email ou senha inválidos');
   }
 };
+
 
   return (
     <div className="login-container">

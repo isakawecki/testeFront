@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080',
+  baseURL: 'https://projeto-clinica-cscsgyg9gkd4chbx.brazilsouth-01.azurewebsites.net',
 });
 
 // Intercepta para colocar o token JWT se existir
